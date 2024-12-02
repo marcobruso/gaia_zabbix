@@ -1,20 +1,12 @@
 # Powershell script for Zabbix agents.
 
-# Version 2.1 - for Zabbix agent 5x
+# Version 0.1
 
 ## This script will check for pending Windows Updates, report them to Zabbix, and optionally install the updates.
-
-### If you do not wish the script to install updates, look for the comment in the script that tells you how to disable that function.
-
-#### Check https://github.com/SpookOz/zabbix-winupdates for the latest version of this script
 
 # ------------------------------------------------------------------------- #
 # Variables
 # ------------------------------------------------------------------------- #
-
-# Change $reportpath to wherever you want your update reports to go.
-
-#$reportpath = "C:\IT\WinUpdates"
 
 # Change $ZabbixInstallPath to wherever your Zabbix Agent is installed
 
@@ -52,12 +44,8 @@ $Senderarg7 = '0'
 $Senderarg8 = '1'
 
 
-$test= get-content "C:\Program Files\Zabbix Agent 2\zabbix_agent2.conf" | select -first 1 -skip 133
-$ok=$test.Substring(9)
-
-
-
-
+$zabbitext= get-content "C:\Program Files\Zabbix Agent 2\zabbix_agent2.conf" | select -first 1 -skip 133
+$zabbixhn=$zabbitext.Substring(9)
 
 
 #If(!(test-path $reportpath))
@@ -107,12 +95,12 @@ if ($updates.Count -eq 0) {
 	Write-Output "- Winupdates.Hidden $($countHidden)" | Out-File -Encoding "ASCII" -FilePath $env:temp$SenderargcountHidden
     Write-Host "`t There are no pending updates" -ForeGroundColor "Green"
 	
-	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$SenderargUpdateReboot -s $ok
-	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$Senderarglastupdated -s $ok
-	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$Senderargcountcritical -s $ok
-	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$SenderargcountOptional -s $ok
-	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$SenderargcountHidden -s $ok
-	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg5 $Senderargupdating $Senderarg6 $Senderarg7 -s $ok
+	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$SenderargUpdateReboot -s $zabbixhn
+	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$Senderarglastupdated -s $zabbixhn
+	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$Senderargcountcritical -s $zabbixhn
+	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$SenderargcountOptional -s $zabbixhn
+	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$SenderargcountHidden -s $zabbixhn
+	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg5 $Senderargupdating $Senderarg6 $Senderarg7 -s $zabbixhn
 	
 	exit $returnStateOK
 }
@@ -147,12 +135,12 @@ if (($countCritical + $countOptional) -gt 0) {
     Write-Host "`t There are $($countOptional) optional updates available" -ForeGroundColor "Yellow"
     Write-Host "`t There are $($countHidden) hidden updates available" -ForeGroundColor "Yellow"
 	
-    & $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$SenderargUpdateReboot -s $ok
-	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$Senderarglastupdated -s $ok
-	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$Senderargcountcritical -s $ok
-	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$SenderargcountOptional -s $ok
-	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$SenderargcountHidden -s $ok
-	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg5 $Senderargupdating $Senderarg6 $Senderarg7 -s $ok
+    & $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$SenderargUpdateReboot -s $zabbixhn
+	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$Senderarglastupdated -s $zabbixhn
+	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$Senderargcountcritical -s $zabbixhn
+	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$SenderargcountOptional -s $zabbixhn
+	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$SenderargcountHidden -s $zabbixhn
+	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg5 $Senderargupdating $Senderarg6 $Senderarg7 -s $zabbixhn
 }   
 
 # ------------------------------------------------------------------------- #
@@ -173,12 +161,12 @@ if ($countHidden -gt 0) {
     Write-Host "`t There are $($countHidden) hidden updates available" -ForeGroundColor "Yellow"
     
 	
-	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$SenderargUpdateReboot -s $ok 
-	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$Senderarglastupdated -s $ok
-	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$Senderargcountcritical -s $ok
-	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$SenderargcountOptional -s $ok
-	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$SenderargcountHidden -s $ok
-	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg5 $Senderargupdating $Senderarg6 $Senderarg7 -s $ok
+	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$SenderargUpdateReboot -s $zabbixhn 
+	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$Senderarglastupdated -s $zabbixhn
+	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$Senderargcountcritical -s $zabbixhn
+	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$SenderargcountOptional -s $zabbixhn
+	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg4 $env:temp$SenderargcountHidden -s $zabbixhn
+	& $Sender $Senderarg1 $Senderarg2 $Senderarg3 $Senderarg5 $Senderargupdating $Senderarg6 $Senderarg7 -s $zabbixhn
 	
 	exit $returnStateOK
 }
